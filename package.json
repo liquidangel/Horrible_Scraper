@@ -1,0 +1,13 @@
+{
+  "name": "horriblesubs_scraper",
+  "version": "0.0.1",
+  "description": "Scrapes the Magnet links for the specified HorribleSubs anime.",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "latest",
+    "request": "latest",
+    "cheerio": "latest"
+  }
+}
