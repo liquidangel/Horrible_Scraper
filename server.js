@@ -18,10 +18,13 @@ function getShowId(url) {
   });
 }
 
-function getShows(baseUrl, index){
-  return new Promise(function(resolve, reject){
+function getShowRecursive(showID){
+  var epsList = [];
+  var startIdx = 0;
+
+  function getShowEps() {
     
-  })
+  }
 }
 
 app.get('/scrape', function(req,res){
