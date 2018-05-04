@@ -1,8 +1,10 @@
 var express = require('express');
 var fs = require('fs');
 var request = require('request');
+var rp = require('request-promise');
 var cheerio = require('cheerio');
 var app = express();
+var shows = {};
 
 function getShowId(url) {
   return new Promise(function(resolve, reject){
@@ -12,20 +14,49 @@ function getShowId(url) {
         showID = html.substr(start, html.indexOf(";",start)-start).split("=")[1].trim();
         resolve(showID);
       } else {
-        reject(err);
+        reject(error);
       }
     });
   });
 }
 
-function getShows(baseUrl, index){
-  return new Promise(function(resolve, reject){
-    
-  })
+function getShows(showID){
+  var fileList = [];
+  var idx=0;
+
+  function readFeed(idx) {
+    console.log("showID:" + showID + "     idx:" + idx);
+    var url = "http://horriblesubs.info/lib/getshows.php?type=show&showid=" + showID + "&index=" + idx;
+    rp(url)
+      .then(function (body){
+        console.log(body);
+        processLinks(body);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }
+
+  function processLinks(html) {
+    if(html != 'DONE') {
+      var $ = cheerio.html(html);
+      $(".release-table").array.forEach(element => {
+        fileList.push(element.children().children().first().text());
+        console.log(element.children().children().first().text());
+      });
+    } else {
+      readFeed(++idx);
+    }
+  }
+
+  return fileList;
 }
 
 app.get('/scrape', function(req,res){
-  url = "http://horriblesubs.info/shows/boku-no-hero-academia";
+  var url = "http://horriblesubs.info/shows/boku-no-hero-academia";
+  var files = getShowId(url).then((showID) => getShows(showID));
+  console.log(files);
+  /*url = "http://horriblesubs.info/shows/boku-no-hero-academia";
   var showID;
   request(url,function(error,response,html){
     if(!error) {
@@ -56,7 +87,7 @@ app.get('/scrape', function(req,res){
       console.log(error);
       console.log(response);
     };
-  });
+  });*/
 });
 
 app.listen('8081');

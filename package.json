@@ -6,8 +6,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "latest",
     "express": "latest",
     "request": "latest",
-    "cheerio": "latest"
+    "request-promise": "^4.2.2"
   }
 }
