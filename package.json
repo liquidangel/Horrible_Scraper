@@ -8,7 +8,6 @@
   "dependencies": {
     "cheerio": "latest",
     "express": "latest",
-    "request": "latest",
-    "request-promise": "^4.2.2"
+    "request": "latest"
   }
 }
