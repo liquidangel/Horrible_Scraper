@@ -31,11 +31,17 @@ function getShows(showID, idx, showList){
         if(html != 'DONE') {
           console.log("Adding shows to list for index: " + idx);
           var $ = cheerio.load(html);
-          $("table.release-table").each(function(i,element) {
-            var a = $(this);
-            showList.push(a.children().children().first().text());
-            //showList.push(element);
-          });
+          $("div.release-links").each(function(i,element){
+            var obj = {};
+            var links = [];
+            obj.label = $(".dl-label",this).text();
+            $(".dl-link",this).each(function(i,element){
+              var a=$(this);
+              links.push(a.html());
+            });
+            obj.links = links;
+            showList.push(obj);
+          });          
           resolve(getShows(showID, ++idx, showList));
         } else {
           resolve(showList);
@@ -47,9 +53,6 @@ function getShows(showID, idx, showList){
   })
 }
 
-/*app.listen('8081');
-console.log("App is running on localhost:8081");
-exports = module.exports = app;*/
 getShowId('http://horriblesubs.info/shows/boku-no-hero-academia')
   .then(function(showID){
     return getShows(showID);
