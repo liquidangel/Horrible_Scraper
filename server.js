@@ -34,11 +34,34 @@ function getShows(showID, idx, showList){
           $("div.release-links").each(function(i,element){
             var obj = {};
             var links = [];
+            var magnets = [];
+            var torrents = [];
+            var ddl = [];
             obj.label = $(".dl-label",this).text();
-            $(".dl-link",this).each(function(i,element){
-              var a=$(this);
-              links.push(a.html());
+            //Magnets
+            $(".hs-magnet-link",this).each(function(i,element){        
+              if($("a",this).attr("href")){  
+                magnets.push($("a",this).attr("href"));
+              }
             });
+            links.push(magnets);
+
+            //Torrents
+            $(".hs-torrent-link",this).each(function(i,element){
+              if($("a",this).attr("href")){
+                torrents.push($("a",this).attr("href"));
+              }
+            });
+            links.push(torrents);
+
+            //DDL Links
+            $(".hs-ddl-link",this).each(function(i,element){
+              if($("a",this).attr("href")){
+                ddl.push($("a",this).attr("href"));
+              }
+            });
+            links.push(ddl);
+
             obj.links = links;
             showList.push(obj);
           });          
@@ -58,7 +81,10 @@ getShowId('http://horriblesubs.info/shows/boku-no-hero-academia')
     return getShows(showID);
   })
   .then(function(result) {
-    console.log(result);
+    result.forEach(element => {
+      console.log("Label: " + element.label);
+      console.log(element.links);
+    });
   })
   .catch(function(err){
     console.log(err);
