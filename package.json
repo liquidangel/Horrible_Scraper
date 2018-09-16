@@ -8,6 +8,7 @@
   "dependencies": {
     "cheerio": "latest",
     "express": "latest",
+    "npm": "^6.2.0",
     "request": "latest"
   }
 }

@@ -1,7 +1,5 @@
-var express = require('express');
 var request = require('request');
 var cheerio = require('cheerio');
-var app = express();
 
 function getShowLinks(showURL) {
 
@@ -27,12 +25,13 @@ function getShowLinks(showURL) {
       if(!showList){
         showList = [];
       }
-      var url = "http://horriblesubs.info/lib/getshows.php?type=show&showid=" + showID + "&nextid=" + idx;
+      var url = "https://horriblesubs.info/api.php?method=getshows&type=show&showid=" + showID + "&nextid=" + idx;
       request(url, function(error, response, html){
         if(!error) {
           if(html != 'DONE') {
             console.log("Adding shows to list for index: " + idx);
             var $ = cheerio.load(html);
+            console.log(html);
             $("div.release-links").each(function(i,element){
               var obj = {};
               var links = [];
@@ -66,6 +65,7 @@ function getShowLinks(showURL) {
 
               obj.links = links;
               showList.push(obj);
+              console.log("Obj: " + obj);
             });          
             resolve(getShows(showID, ++idx, showList));
           } else {
